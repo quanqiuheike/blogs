@@ -1,6 +1,6 @@
 > 个人主页 : [https://quanqiuheike.github.io/blogs/](https://quanqiuheike.github.io/blogs)
 
-> GitHub : [https://github.com/quanqiuheike/blogs](https://github.com/quanqiuheike/testvlog)
+> GitHub : [https://github.com/quanqiuheike/blogs](https://github.com/quanqiuheike/blogs)
 
 ## 初始化项目{docsify-ignore}
 ### 快速开始
