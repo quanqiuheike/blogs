@@ -8,7 +8,18 @@
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <!-- Theme: Defaults -->
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-defaults.css"> -->
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css"
+    title="Simple">
+  <link rel="stylesheet" href="assets/css/main.css">
 
+  <!-- Alternate Stylesheets -->
+  <link rel="stylesheet alternate" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-defaults.css"
+    title="Defaults">
+  <link rel="stylesheet alternate"
+    href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css" title="Simple Dark">
 </head>
 
 <body>
@@ -25,9 +36,10 @@
       loadSidebar: true,
       //可以根据 _sidebar.md 的内容自动为每个页面增加标题
       autoHeader: true,
-      subMaxLevel: 2,
+      subMaxLevel: 3,
       // 将文档中标题渲染成目录
       maxLevel: 3,
+      executeScript: true,
       auto2top: true,
       //导航栏，_navbar.md
       loadNavbar: true,
@@ -41,7 +53,7 @@
       themeColor: '#ff0000',
       search: {
         paths: 'auto',
-        // placeholder: '搜索',
+        noData: 'No results!',
         // 支持本地化
         placeholder: {
           '/': '搜索'
@@ -65,10 +77,15 @@
         // 'aidl': '/',
         '/': '/kotlin/',
       },
+
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1/dist/docsify-tabs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
   <!-- 搜索 -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <!-- <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
