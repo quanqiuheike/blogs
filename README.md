@@ -1,7 +1,3 @@
-# blogs
-个人技术博客
-## 介绍 🐙
-
 > 个人主页 : [Blogs](https://quanqiuheike.github.io/blogs/)
 
 > GitHub : [https://github.com/quanqiuheike/blogs](https://github.com/quanqiuheike/testvlog)
