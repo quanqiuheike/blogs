@@ -2,7 +2,7 @@
 
 > GitHub : [https://github.com/quanqiuheike/blogs](https://github.com/quanqiuheike/testvlog)
 
-## 初始化项目
+## 初始化项目{docsify-ignore}
 ### 快速开始
 > 推荐全局安装 docsify-cli 工具，可以方便地创建及在本地预览生成的文档。
   ```npm i docsify-cli -g```

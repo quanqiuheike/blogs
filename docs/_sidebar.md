@@ -4,6 +4,7 @@
   * [Java高级语言特性，注解与反射]()
   * [Retrofit中的注解、反射与动态代理]()
 * [【02】kotlin]()
+  * [kotlin内置数据类型](/【02】kotlin/kotlin内置数据类型.md)
 * [【03】高级UI]()
   * [自定义View流程](/高级UI/自定义View流程.md)
 * [【04】FrameWork层源码解析](FrameWork层源码解析/Activity启动流程.md)
