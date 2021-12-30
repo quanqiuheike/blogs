@@ -1,7 +1,7 @@
-> 个人主页 : [https://quanqiuheike.github.io/blogs/](https://quanqiuheike.github.io/blogs)
+ ## [个人主页](https://quanqiuheike.github.io/blogs)|[GitHub](https://github.com/quanqiuheike/blogs)
+**如需转载, 请注明出处**
 
-> GitHub : [https://github.com/quanqiuheike/blogs](https://github.com/quanqiuheike/blogs)
-
+如果我的博客对你有帮助 , 那就帮我点个星星吧 🤣 [`Star`](https://github.com/quanqiuheike/blogs)
 ## 初始化项目{docsify-ignore}
 ### 快速开始
 > 推荐全局安装 docsify-cli 工具，可以方便地创建及在本地预览生成的文档。
@@ -13,12 +13,12 @@
 > docsify serve docs
 
 ### 博客向导 🍀
-本博客由 [Docsify](https://docsify.js.org/#/zh-cn/) 自动构建
+本博客由 [`Docsify`](https://docsify.js.org/#/zh-cn/) 自动构建
 
 ### 感谢 🍀
 感谢以下老哥们提供的宝贵意见与指正, 一起进步
 
-yalezhangk: https://yalezhangk.github.io/blogs
+`yalezhangk: https://yalezhangk.github.io/blogs`
 
 
 
