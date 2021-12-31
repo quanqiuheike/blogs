@@ -1,15 +1,9 @@
-
-<!-- _navbar.md -->
-
-
 * 入门
 
-  * [快速开始](zh-cn/quickstart.md)
+  * [快速开始](readme.md)
   * [多页文档](zh-cn/more-pages.md)
   * [定制导航栏](zh-cn/custom-navbar.md)
   * [封面](zh-cn/cover.md)
-
-
 * 配置
   * [配置项](zh-cn/configuration.md)
   * [主题](zh-cn/themes.md)

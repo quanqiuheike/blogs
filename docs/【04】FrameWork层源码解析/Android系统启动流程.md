@@ -1,4 +1,4 @@
-# [原文：Android系统启动流程](https://www.jianshu.com/p/2c1318b0f527)
+# [原文：Android系统启动流程](https://www.jianshu.com/p/2c1318b0f527){docsify-ignore}
 Init->init.rc->init.cpp#main()->app_process.cpp#main()->AndroidRuntime.cpp#start()->ZygoteInit#main()->ZygoteInit#startSystemServer()->Zygote#forkSystemServer()->ZygoteInit#handleSystemServerProcess(启动systemservice)->ZygoteInit#zygoteInit()->RuntimeInit#applicationInit()->RuntimeInit#findStaticMain()->反射加载SystemService#main()->SystemService#run()->startBootstrapServices/startCoreServices/startOtherServices->AMS,ATMS,WMS
 ### 一：Init
 当用户按下开机键的时候，引导芯片加载BootLoader到内存中，开始拉起Linux OS，一旦Linux内核启动完毕后，它就会在系统文件中寻找 init.rc 文件，并启动init 进程。

@@ -1,7 +1,8 @@
-# 本文主要讲Activity，Window，PhoneWindow，DecorView，ViewRootImpl，WindowManager，View绘制requestLayout等。
-# [原文版权Android WMS流程](https://blog.csdn.net/qq_14876133/article/details/100103907)
-# [Handler消息Message屏障消息](https://blog.csdn.net/mirkowug/article/details/115091337)
-# WMS流程
+### 本文主要讲Activity，Window，PhoneWindow，DecorView，ViewRootImpl，WindowManager，View绘制requestLayout等{docsify-ignore}
+
+### [原文版权Android WMS流程](https://blog.csdn.net/qq_14876133/article/details/100103907){docsify-ignore}
+### [Handler消息Message屏障消息](https://blog.csdn.net/mirkowug/article/details/115091337){docsify-ignore}
+## WMS流程
 ![image.png](https://upload-images.jianshu.io/upload_images/2981395-f7a58d93a63d10b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ```
 1、System.core.init.cpp文件的main方法

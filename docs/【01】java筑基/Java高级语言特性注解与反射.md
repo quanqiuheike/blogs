@@ -10,7 +10,7 @@
 `java`内置的注解有`Override, Deprecated, SuppressWarnings`等, 作用相信大家都知道。
 
 现在查看`Override`注解的源码
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Override {
@@ -67,8 +67,9 @@ public @interface TestAnnotation {
 加载的时候：`Class对象`的由来是将`class文件`读`入内存`，并为之创建一个`Class对象`。
 
 在运行期间，如果我们要产生某个类的对象，`Java`虚拟机`(JVM)`会检查该类型的`Class`对象是否已被加载。如果没有被加载，`JVM`会根据类的名称找到`.class`文件并加载它。一旦某个类型的`Class`对象已被加载到内存，就可以用它来产生该类型的所有对象。
-![image.png](https://upload-images.jianshu.io/upload_images/2981395-b4c7da80eda020d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-###反射机制主要提供的功能
+![image.png](_images/反射图片.webp)
+![logo](https://docsify.js.org/_media/icon.svg ':size=100')
+### 反射机制主要提供的功能
 * 在运行时判断任意一个对象所属的类；
 * 在运行时构造任意一个类的对象；
 * 在运行时判断任意一个类所具有的成员变量和方法；

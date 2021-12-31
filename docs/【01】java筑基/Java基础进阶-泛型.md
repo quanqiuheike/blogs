@@ -1,4 +1,4 @@
-### [原文：java 泛型详解-绝对是对泛型方法讲解最详细的，没有之一](https://blog.csdn.net/s10461/article/details/53941091)
+### [原文：java 泛型详解-绝对是对泛型方法讲解最详细的，没有之一](https://blog.csdn.net/s10461/article/details/53941091){docsify-ignore}
 
 ## 1. 概述 什么是泛型？为什么要使用泛型？
 泛型在java中有很重要的地位，在面向对象编程及各种设计模式中有非常广泛的应用。
