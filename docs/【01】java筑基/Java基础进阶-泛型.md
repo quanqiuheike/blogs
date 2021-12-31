@@ -18,7 +18,7 @@ for(int i = 0; i< arrayList.size();i++){
 
 ```
 程序报错.ArrayList可以存放任意类型，例子中添加了一个String类型，添加了一个Integer类型，再使用时都以String的方式使用，因此程序崩溃了。为了解决类似这样的问题（在编译阶段就可以解决），泛型应运而生。
-```
+```bash
 java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String
 ```
 我们将第一行声明初始化list的代码更改一下，编译器会在编译阶段就能够帮我们发现类似这样的问题。

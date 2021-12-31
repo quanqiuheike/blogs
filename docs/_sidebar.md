@@ -1,5 +1,8 @@
 
 * 【01】java筑基
+  * [Java-设计模式详解.md](【01】java筑基/Java-设计模式详解.md)
+  <!-- * [Java设计模式](【01】java筑基/Java设计模式/java-设计模式六大原则.md) -->
+    <!-- * [java-设计模式六大原则](【01】java筑基/Java设计模式/java-设计模式六大原则.md) -->
   * [Java基础进阶-泛型](【01】java筑基/Java基础进阶-泛型.md)
   * [Java高级语言特性注解与反射.md](【01】java筑基/Java高级语言特性注解与反射.md)
   * [Retrofit中的注解反射与动态代理](【01】java筑基/Retrofit中的注解反射与动态代理.md)
@@ -40,4 +43,4 @@
 * 【08】设计模式
 * 【09】Gralde
 * zh-cn
-  * [blogs集成配置](zh-cn/blogs集成配置.md)
+* [指南](/guide.md)
