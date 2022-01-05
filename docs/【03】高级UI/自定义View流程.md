@@ -1,8 +1,14 @@
-<img src="https://upload-images.jianshu.io/upload_images/10294405-4ca426e6a92db696.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp" alt="img" style="zoom: 50%;" />
+![](./images/自定义view坐标图.png)
 
-![1639228534208](C:\Users\chengqiuxia\AppData\Roaming\Typora\typora-user-images\1639228534208.png)
+![](./images/自定义view实现方式图.png)
 
-<img src="https://upload-images.jianshu.io/upload_images/10294405-49437ed26f19f7d5.png?imageMogr2/auto-orient/strip|imageView2/2/w/557/format/webp" alt="img"  />
+
+
+
+
+![](./images\自定义view绘制流程.png)
+
+
 
 
 

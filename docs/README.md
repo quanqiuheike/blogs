@@ -15,12 +15,6 @@
 
 ### 博客向导 🍀
 本博客由 [`Docsify`](https://docsify.js.org/#/zh-cn/) 自动构建
-
-### 感谢 🍀
-感谢以下老哥们提供的宝贵意见与指正, 一起进步
-
-`yalezhangk: https://yalezhangk.github.io/blogs`
-
 ---
 
 ## About me
@@ -30,6 +24,6 @@
 - **掘金：**https://www.jianshu.com/u/76329234539c
 
 - **Email:** 1831814662@qq.com
-
+#### {docsify-updated}
   
-
+ 

@@ -44,8 +44,9 @@
         mergeNavbar: false,
         //封面 _coverpage.md
         coverpage: false,
-        //显示文档更新日期
-        formatUpdated: '{MM}/{DD} {HH}:{mm}',
+        //显示文档更新日期 {docsify-updated}
+        formatUpdated: '{YYYY}/{MM}/{DD} {HH}:{mm}',
+
         // 主题颜色
         themeColor: '#ff0000',
         search: {
@@ -89,7 +90,24 @@
           // '/【01】java筑基': '/java',
           // // 'aidl': '/',
           // '/': '/kotlin/',
-        }
+        },
+        plugins: [
+          function (hook, vm) {
+            hook.beforeEach(function (html) {
+              var url =
+                'https://github.com/quanqiuheike/blogs/blob/main/docs/' +
+                vm.route.file;
+              var editHtml = '[📝 EDIT DOCUMENT](' + url + ')\n';
+              return (
+                editHtml +
+                html +
+                '\n----\n' +
+                'last modify time {docsify-updated} '
+              );
+            });
+
+          }
+        ]
       }
   </script>
   <!-- Docsify v4 -->
