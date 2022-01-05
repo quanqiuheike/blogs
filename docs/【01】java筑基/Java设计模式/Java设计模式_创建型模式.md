@@ -1295,9 +1295,10 @@ public class PrototypeTest {
 }
 ```
 
-<!-- {docsify-updated} -->
+
 
 #### Reference
 
 http://c.biancheng.net/view/1343.html
 
+ 
