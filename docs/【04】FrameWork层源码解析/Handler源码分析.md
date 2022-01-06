@@ -216,13 +216,13 @@ MessageQueue.java
  *消息入队列当中，根据when比较排序
  */
 boolean enqueueMessage(Message msg, long when) {
-//屏障消息的target才会为null，区别于普通消息
+//屏障消息的target才会为null，区别于普通消息,屏障消息不会调用该方法
         if (msg.target == null) {
             throw new IllegalArgumentException("Message must have a target.");
         }
 
         synchronized (this) {
-        // 一个Message，只能发送一次 
+        // 一个Message，只能发送一次 ，同步锁
             if (msg.isInUse()) {
                 throw new IllegalStateException(msg + " This message is already in use.");
             }
@@ -254,7 +254,6 @@ boolean enqueueMessage(Message msg, long when) {
                 // up the event queue unless there is a barrier at the head of the queue
                 // and the message is the earliest asynchronous message in the queue.
                 // 根据延迟执行时间排序，根据需要把消息插入到消息队列的合适位置，通常是调用xxxDelay方法，延时发送消息，target=null是屏障消息，为消息屏障的情况则需要唤醒
-                
                 needWake = mBlocked && p.target == null && msg.isAsynchronous();
                 //双向链表
                 Message prev;
@@ -278,8 +277,10 @@ boolean enqueueMessage(Message msg, long when) {
             }
 
             // We can assume mPtr != 0 because mQuitting is false.
-           // 如果队列阻塞了，则唤醒 ,相当于唤醒looper中等待的线程（如果是即时消息并且是等待的线程）
+           // 如果队列阻塞了，则唤醒 ,相当于唤醒looper中等待的线程（如果是即时消息并且是等待的线程）?
+           // nativeWake 写入一个 IO 操作到描述符, nativePollOnce 在某个文件描述符上调用 epoll_wait等待,nativeWake 等同于 Object.notify()，nativePollOnce 大致等同于 Object.wait()
             if (needWake) {
+            //这里唤醒 nativePollOnce 的沉睡
                 nativeWake(mPtr);
             }
         }
@@ -605,6 +606,8 @@ public static Message obtain() {
            //如果nextPollTimeoutMillis=-1，一直阻塞不会超时。满了或者为空的情况为-1
            //如果nextPollTimeoutMillis=0，不会阻塞，立即返回。
            //如果nextPollTimeoutMillis>0，最长阻塞nextPollTimeoutMillis毫秒(超时)，如果期间有程序唤醒会立即返回。
+            //  nativePollOnce 相当于object.wait()这里陷入沉睡, 等待唤醒对应enqueueMessage的nativeWake（）.nativePollOnce表示消息的处理已完成, 线程正在等待下一个消息.
+            //如果队列为空(无返回值), 该方法将一直阻塞直到添加新消息为止
             nativePollOnce(ptr, nextPollTimeoutMillis);
 
             synchronized (this) {
@@ -709,6 +712,214 @@ public static Message obtain() {
 2.读取列表中的消息，如果发现消息屏障，则跳过后面的同步消息。
 3.如果拿到的消息还没有到时间，则重新赋值nextPollTimeoutMillis = 延时的时间，线程会阻塞，直到时间到后自动唤醒
 4.如果消息是及时消息或延时消息的时间到了，则会返回此消息给looper处理。
+
+#### CPP中的nativeWake和nativepollonce
+
+#### `nativeWake`
+
+```c++
+void NativeMessageQueue::wake() {
+    mLooper->wake();
+}
+
+void Looper::wake() {
+    uint64_t inc = 1;
+    ssize_t nWrite = TEMP_FAILURE_RETRY(write(mWakeEventFd, &inc, sizeof(uint64_t)));
+    if (nWrite != sizeof(uint64_t)) {
+        if (errno != EAGAIN) {
+            LOG_ALWAYS_FATAL("Could not write wake signal to fd %d: %s",
+                    mWakeEventFd, strerror(errno));
+        }
+    }
+}
+```
+
+#### `nativePollOnce`:
+
+```c++
+void NativeMessageQueue::pollOnce(JNIEnv* env, jobject pollObj, int timeoutMillis) {
+    mPollEnv = env;
+    mPollObj = pollObj;
+    mLooper->pollOnce(timeoutMillis);
+    mPollObj = NULL;
+    mPollEnv = NULL;
+
+    if (mExceptionObj) {
+        env->Throw(mExceptionObj);
+        env->DeleteLocalRef(mExceptionObj);
+        mExceptionObj = NULL;
+    }
+}
+
+int Looper::pollOnce(int timeoutMillis, int* outFd, int* outEvents, void** outData) {
+    int result = 0;
+    for (;;) {
+        while (mResponseIndex < mResponses.size()) {
+            const Response& response = mResponses.itemAt(mResponseIndex++);
+            int ident = response.request.ident;
+            if (ident >= 0) {
+                int fd = response.request.fd;
+                int events = response.events;
+                void* data = response.request.data;
+                if (outFd != NULL) *outFd = fd;
+                if (outEvents != NULL) *outEvents = events;
+                if (outData != NULL) *outData = data;
+                return ident;
+            }
+        }
+
+        if (result != 0) {
+            if (outFd != NULL) *outFd = 0;
+            if (outEvents != NULL) *outEvents = 0;
+            if (outData != NULL) *outData = NULL;
+            return result;
+        }
+
+        result = pollInner(timeoutMillis);
+    }
+}
+
+int Looper::pollInner(int timeoutMillis) {
+    // Adjust the timeout based on when the next message is due.
+    if (timeoutMillis != 0 && mNextMessageUptime != LLONG_MAX) {
+        nsecs_t now = systemTime(SYSTEM_TIME_MONOTONIC);
+        int messageTimeoutMillis = toMillisecondTimeoutDelay(now, mNextMessageUptime);
+        if (messageTimeoutMillis >= 0
+                && (timeoutMillis < 0 || messageTimeoutMillis < timeoutMillis)) {
+            timeoutMillis = messageTimeoutMillis;
+        }
+    }
+
+    // Poll.
+    int result = POLL_WAKE;
+    mResponses.clear();
+    mResponseIndex = 0;
+
+    // We are about to idle.
+    mPolling = true;
+
+    struct epoll_event eventItems[EPOLL_MAX_EVENTS];
+    // 这里重点
+    int eventCount = epoll_wait(mEpollFd, eventItems, EPOLL_MAX_EVENTS, timeoutMillis);
+
+    // No longer idling.
+    mPolling = false;
+
+    // Acquire lock.
+    mLock.lock();
+
+    // Rebuild epoll set if needed.
+    if (mEpollRebuildRequired) {
+        mEpollRebuildRequired = false;
+        rebuildEpollLocked();
+        goto Done;
+    }
+
+    // Check for poll error.
+    if (eventCount < 0) {
+        if (errno == EINTR) {
+            goto Done;
+        }
+        ALOGW("Poll failed with an unexpected error: %s", strerror(errno));
+        result = POLL_ERROR;
+        goto Done;
+    }
+
+    // Check for poll timeout.
+    if (eventCount == 0) {
+        result = POLL_TIMEOUT;
+        goto Done;
+    }
+
+    // Handle all events.
+    for (int i = 0; i < eventCount; i++) {
+        int fd = eventItems[i].data.fd;
+        uint32_t epollEvents = eventItems[i].events;
+        if (fd == mWakeEventFd) {
+            if (epollEvents & EPOLLIN) {
+                awoken();
+            } else {
+                ALOGW("Ignoring unexpected epoll events 0x%x on wake event fd.", epollEvents);
+            }
+        } else {
+            ssize_t requestIndex = mRequests.indexOfKey(fd);
+            if (requestIndex >= 0) {
+                int events = 0;
+                if (epollEvents & EPOLLIN) events |= EVENT_INPUT;
+                if (epollEvents & EPOLLOUT) events |= EVENT_OUTPUT;
+                if (epollEvents & EPOLLERR) events |= EVENT_ERROR;
+                if (epollEvents & EPOLLHUP) events |= EVENT_HANGUP;
+                pushResponse(events, mRequests.valueAt(requestIndex));
+            } else {
+                ALOGW("Ignoring unexpected epoll events 0x%x on fd %d that is "
+                        "no longer registered.", epollEvents, fd);
+            }
+        }
+    }
+Done: ;
+
+    // Invoke pending message callbacks.
+    mNextMessageUptime = LLONG_MAX;
+    while (mMessageEnvelopes.size() != 0) {
+        nsecs_t now = systemTime(SYSTEM_TIME_MONOTONIC);
+        const MessageEnvelope& messageEnvelope = mMessageEnvelopes.itemAt(0);
+        if (messageEnvelope.uptime <= now) {
+            // Remove the envelope from the list.
+            // We keep a strong reference to the handler until the call to handleMessage
+            // finishes.  Then we drop it so that the handler can be deleted *before*
+            // we reacquire our lock.
+            { // obtain handler
+                sp<MessageHandler> handler = messageEnvelope.handler;
+                Message message = messageEnvelope.message;
+                mMessageEnvelopes.removeAt(0);
+                mSendingMessage = true;
+                mLock.unlock();
+                handler->handleMessage(message);
+            } // release handler
+
+            mLock.lock();
+            mSendingMessage = false;
+            result = POLL_CALLBACK;
+        } else {
+            // The last message left at the head of the queue determines the next wakeup time.
+            mNextMessageUptime = messageEnvelope.uptime;
+            break;
+        }
+    }
+
+    // Release lock.
+    mLock.unlock();
+
+    // Invoke all response callbacks.
+    for (size_t i = 0; i < mResponses.size(); i++) {
+        Response& response = mResponses.editItemAt(i);
+        if (response.request.ident == POLL_CALLBACK) {
+            int fd = response.request.fd;
+            int events = response.events;
+            void* data = response.request.data;
+            // Invoke the callback.  Note that the file descriptor may be closed by
+            // the callback (and potentially even reused) before the function returns so
+            // we need to be a little careful when removing the file descriptor afterwards.
+            int callbackResult = response.request.callback->handleEvent(fd, events, data);
+            if (callbackResult == 0) {
+                removeFd(fd, response.request.seq);
+            }
+
+            // Clear the callback reference in the response structure promptly because we
+            // will not clear the response vector itself until the next poll.
+            response.request.callback.clear();
+            result = POLL_CALLBACK;
+        }
+    }
+    return result;
+}
+
+```
+
+
+
+
+
 **Handler.sendMessageDelayed()怎么实现延迟的？**
 前面我们分析了如果拿到的消息还**没有到时间**，则会**重新设置超时**时间并赋值给`nextPollTimeoutMillis`，然后调用`nativePollOnce(ptr, nextPollTimeoutMillis)`进行阻塞，这是一个本地方法，会调用底层C++代码，`C++`代码最终会通过`Linux的epoll`监听`文件描述符的写入事件`来实现延迟的。
 
@@ -853,7 +1064,14 @@ while true {
 
 
 
+#### `nativePollOnce` 是什么
 
+`nativePollOnce` 方法用于“等待”, 直到下一条消息可用为止. 如果在此调用期间花费的时间很长, 则您的主线程没有实际工作要做, 而是等待下一个事件处理.无需担心.
+
+**说明:**
+
+因为主线程负责绘制 UI 和处理各种事件, 所以主线程拥有一个处理所有这些事件的循环. 该循环由 `Looper` 管理, 其工作非常简单: 它处理 `MessageQueue` 中的所有 `Message`.
+例如, 响应于输入事件, 将消息添加到队列, 帧渲染回调, 甚至您的 `Handler.post` 调用. 有时主线程无事可做（即队列中没有消息), 例如在完成渲染单帧之后(线程刚绘制了一帧, 并准备好下一帧, 等待适当的时间). `MessageQueue` 类中的两个 Java 方法对我们很有趣: `Message next()`和 `boolean enqueueMessage(Message, long)`. 顾名思义, `Message next()` 从队列中获取并返回下一个消息. 如果队列为空(无返回值), 则该方法将调用 `native void nativePollOnce(long, int)`, 该方法将一直阻塞直到添加新消息为止. 此时,您可能会问`nativePollOnce` 如何知道何时醒来. 这是一个很好的问题. 当将 `Message` 添加到队列时, 框架调用 `enqueueMessage` 方法, 该方法不仅将消息插入队列, 而且还会调用`native static void nativeWake(long)`. `nativePollOnce` 和 `nativeWake` 的核心魔术发生在 native 代码中. native `MessageQueue` 利用名为 `epoll` 的 Linux 系统调用, 该系统调用可以监视文件描述符中的 IO 事件. `nativePollOnce` 在某个文件描述符上调用 `epoll_wait`, 而 `nativeWake` 写入一个 IO 操作到描述符, `epoll_wait` 等待. 然后, 内核从等待状态中取出 `epoll` 等待线程, 并且该线程继续处理新消息. 如果您熟悉 Java 的 `Object.wait()`和 `Object.notify()`方法,可以想象一下 `nativePollOnce` 大致等同于 `Object.wait()`, `nativeWake` 等同于 `Object.notify()`,但它们的实现完全不同: `nativePollOnce` 使用 `epoll`, 而 `Object.wait` 使用 `futex` Linux 调用. 值得注意的是, `nativePollOnce` 和 `Object.wait` 都不会浪费 CPU 周期, 因为当线程进入任一方法时, 出于线程调度的目的, 该线程将被禁用(引用Object类的javadoc). 但是, 某些事件探查器可能会错误地将等待 `epoll` 等待(甚至是 Object.wait)的线程识别为正在运行并消耗 CPU 时间, 这是不正确的. 如果这些方法实际上浪费了 CPU 周期, 则所有空闲的应用程序都将使用 100％ 的 CPU, 从而加热并降低设备速度.
 
 
 
@@ -873,25 +1091,27 @@ while true {
 
 ### Reference & Thanks {docsify-ignore}
 
-##### [Handler.post和View.post的区别](https://www.jianshu.com/p/7280b2d3b4d1)
+[Handler.post和View.post的区别](https://www.jianshu.com/p/7280b2d3b4d1)
 
-##### [View的onAttachedToWindow和onDetachedFromWindow的调](https://www.jianshu.com/p/e7b6fa788ae6)
+[View的onAttachedToWindow和onDetachedFromWindow的调](https://www.jianshu.com/p/e7b6fa788ae6)
 
-##### [彻底明白Android消息机制的原理及源码](https://blog.csdn.net/weixin_42316079/article/details/112182628)
+[彻底明白Android消息机制的原理及源码](https://blog.csdn.net/weixin_42316079/article/details/112182628)
 
-##### [MessageQueue#next() 方法图解](https://blog.csdn.net/qq_21586317/article/details/88780077)
+[MessageQueue#next() 方法图解](https://blog.csdn.net/qq_21586317/article/details/88780077)
 
-##### [Handler消息Message屏障消息](https://blog.csdn.net/mirkowug/article/details/115091337)
+[Handler消息Message屏障消息](https://blog.csdn.net/mirkowug/article/details/115091337)
 
-##### [Handler之消息屏障你应该知道的](https://blog.csdn.net/my_csdnboke/article/details/109531168)
+[Handler之消息屏障你应该知道的](https://blog.csdn.net/my_csdnboke/article/details/109531168)
 
-##### [你应该要知道的handler消息屏障](https://blog.csdn.net/lggisking/article/details/108091203)
+[你应该要知道的handler消息屏障](https://blog.csdn.net/lggisking/article/details/108091203)
 
-[荐：【Android自助餐】Handler消息机制完全解析（一）Message中obtain()与recycle()的来龙去脉](https://blog.csdn.net/xmh19936688/article/details/51901338)
+[【Android自助餐】Handler消息机制完全解析（一）Message中obtain()与recycle()的来龙去脉](https://blog.csdn.net/xmh19936688/article/details/51901338)
 
 [Handler消息机制之深入理解Message.obtain()](https://blog.csdn.net/chenbaige/article/details/79473475)
 
 https://blog.csdn.net/chenbaige/article/details/79473475)
 
 [Handler详解4-epoll、looper.loop主线程阻塞](https://www.cnblogs.com/muouren/p/11706457.html)
+
+[Android 中 MessageQueue 的 nativePollOnce ](https://www.cnblogs.com/jiy-for-you/p/11707356.html)
 

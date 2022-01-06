@@ -19,9 +19,6 @@ implementation 'com.google.auto.service:auto-service:1.0.1'
 //javapoet
 implementation 'com.squareup:javapoet:1.13.0'
 
-    
-    
-
 ```
 
 
@@ -39,16 +36,13 @@ implementation 'com.squareup:javapoet:1.13.0'
   ```java
   // https://mvnrepository.com/artifact/com.google.auto.service/auto-service
   implementation 'com.google.auto.service:auto-service:1.0.1'
-  
       
    Kotlin版本
   // https://mvnrepository.com/artifact/com.google.auto.service/auto-service
   implementation("com.google.auto.service:auto-service:1.0.1")
   
-  
-  
   ```
-
+  
   
 
 <img src="C:\Users\chengqiuxia\AppData\Roaming\Typora\typora-user-images\image-20211119124323292.png" alt="image-20211119124323292" style="zoom:80%;" />
@@ -59,21 +53,21 @@ implementation 'com.squareup:javapoet:1.13.0'
 
 #### 1、APT：Annotation Processing Tools。编译期处理注解工具。
 
-对源代码文件进行检测找出其中的Annotation，Annotation处理器在处理Annotation时可以根据源文件中的Annotation**生成额外的源文件和其它的文件，APT还会编译生成的源文件和原来的源文件，将它们一起生成class文件。**
+对源代码文件进行检测找出其中的`Annotation`，`Annotation`处理器在处理`Annotation`时可以根据源文件中的`Annotation`**生成额外的源文件和其它的文件，APT还会编译生成的源文件和原来的源文件，将它们一起生成class文件。**
 
 简单的说：不影响性能的情况下，自动生成代码。
 
-常用的ButterKnife、Dagger等都用注解生成代码的工具几乎都是用了APT。
+常用的`ButterKnife、Dagger`等都用注解生成代码的工具几乎都是用了`APT`。
 
 #### 2、四个元注解
 
-@target: 目标位置，也就是注解可以被用在那里，如方法、属性、类
+**@target:** 目标位置，也就是注解可以被用在那里，如方法、属性、类
 
-@Retention：保留级别，也就是注解生效的时间，换言之理解为"生命周期"
+**@Retention：**保留级别，也就是注解生效的时间，换言之理解为"生命周期"
 
-@Documented：包含进文档
+**@Documented：**包含进文档
 
-@Inherited：子类继承父类注解
+**@Inherited：**子类继承父类注解
 
 #### 3、APT工作流程
 
@@ -87,10 +81,10 @@ implementation 'com.squareup:javapoet:1.13.0'
 
 ##### AutoService注册
 
-​		AutoService可以自动生成META-INF/services/javax.annotation.processing.Processor文件的。省去了打jar包这些繁琐的步骤。
+​		`AutoService`可以自动生成`META-INF/services/javax.annotation.processing.Processor`文件的。省去了打`jar`包这些繁琐的步骤。
 
-​		由于处理器是javac的工具，因此我们必须将我们自己的处理器注册到javac中，在以前我们需要提供一个.jar文件，打包你的注解处理器到此文件中，并在在你的jar中，需要打包一个特定的文件 javax.annotation.processing.Processor到META-INF/services路径下
-把MyProcessor.jar放到你的builpath中，javac会自动检查和读取javax.annotation.processing.Processor中的内容，并且注册MyProcessor作为注解处理器。
+​		由于处理器是`javac`的工具，因此我们必须将我们自己的处理器注册到javac中，在以前我们需要提供一个.jar文件，打包你的注解处理器到此文件中，并在在你的jar中，需要打包一个特定的文件 `javax.annotation.processing.Processor到META-INF/services`路径下
+把`MyProcessor.jar`放到你的`builpath`中，javac会自动检查和读取`javax.annotation.processing.Processor`中的内容，并且注册`MyProcessor`作为注解处理器。
 
 #### 4、注册处理器的大致流程（使用AutoService可以直接解决注册）
 

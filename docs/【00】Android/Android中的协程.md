@@ -14,7 +14,7 @@
 
 
 
-```
+```kotlin
 方式1：
 GlobalScope.launch { // 在后台启动一个新的协程并继续
         delay(1000L) // 非阻塞的等待 1 秒钟（默认时间单位是毫秒）
@@ -31,17 +31,13 @@ fun main() = runBlocking {
 
 ```
 
-
-
-
-
 ### 第一个协程程序
 
 
 
-GlobalScope.launch和delay一起使用
+`GlobalScope.launch`和`delay`一起使用
 
-Thread和Thread.sleep一起使用
+`Thread`和`Thread.sleep`一起使用
 
 **Delay**:是一个特殊的 挂起函数 ，它不会造成线程阻塞，但是会挂起协程，并且只能在协程中使用。
 
@@ -62,11 +58,11 @@ fun main() {
 
 如果你首先将 `GlobalScope.launch` 替换为 `thread`，编译器会报以下错误：
 
-```
+```bash
 Error: Kotlin: Suspend functions are only allowed to be called from a coroutine or another suspend function
 ```
 
-```
+```kotlin
 import kotlinx.coroutines.*
 
 fun main() {

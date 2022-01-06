@@ -5,6 +5,24 @@
         ├── README.md
         └── guide.md
 
+
+
+## 初始化项目 {docsify-ignore}
+
+### 快速开始
+
+> 推荐全局安装 docsify-cli 工具，可以方便地创建及在本地预览生成的文档。
+> ```npm i docsify-cli -g```
+>
+> ### 初始化项目  
+>
+> 如果想在项目的 ./docs 目录里写文档，直接通过 init 初始化项目。
+> ```docsify serve docs```
+
+### 本地预览
+
+> docsify serve docs
+
 ### [代码高亮](https://docsify.js.org/#/zh-cn/language-highlight)
 搜索，注意版本号和替换问题
 [支持的语法查找](https://cdn.jsdelivr.net/npm/prismjs@1/components/)
