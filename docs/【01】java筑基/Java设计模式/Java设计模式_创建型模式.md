@@ -1302,3 +1302,4 @@ public class PrototypeTest {
 http://c.biancheng.net/view/1343.html
 
  
+
