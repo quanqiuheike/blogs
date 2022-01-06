@@ -1,5 +1,5 @@
  ## [个人主页](https://quanqiuheike.github.io/blogs)|[GitHub](https://github.com/quanqiuheike/blogs)
-*本博客内容持续更新...精彩内容就快出来啦...*
+*本博客内容持续更新(迁移)...精彩内容就快出来啦...*
 
 **如需转载, 请注明出处**
 
