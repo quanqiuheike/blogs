@@ -21,10 +21,10 @@
 
 * 【03】高级UI
   * [自定义View流程](【03】高级UI/自定义View流程.md)
-
 * 【04】FrameWork层源码解析
-  * [ Handler源码分析](/[04]FrameWork层源码解析/Handler源码分析.md)
-  *  AMS核心分析
+  
+  * [ Handler源码分析](/【04】FrameWork层源码解析/Handler源码分析.md)
+  * AMS核心分析
   * PMS安装与签名校验
   * WMS核心分析 
   * [Android系统启动流程](/【04】FrameWork层源码解析/Android系统启动流程.md)
@@ -40,7 +40,6 @@
   * 静态开辟内存与动态开辟内存
   * 指针实战运用进阶之字符串操作
   * 结构体与结构体指针数组
-
 * 【08】设计模式
 * 【09】Gralde
 * zh-cn
