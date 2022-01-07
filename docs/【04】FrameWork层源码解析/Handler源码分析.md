@@ -1,3 +1,5 @@
+[TOC]
+
 ## Handler、Looper、MessageQueue、Message之间的关系？
 
 **工作的流程**
