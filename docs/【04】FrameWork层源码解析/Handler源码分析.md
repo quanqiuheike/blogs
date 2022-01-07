@@ -141,33 +141,134 @@ mHandler = new Handler(getMainLooper(), new Handler.Callback() {
 
 ```
 
-Handle消息的纷发分为三种情况
+##### Handle消息的纷发分为三种情况
+
+
 
 ```java
-	/**
+
+/**
      * Handle system messages here.
      */
     public void dispatchMessage(@NonNull Message msg) {
-
+//callback是msg中的一个字段，是一个Runnable对象，当通过handler.post方法发送一个runnable的时候就会被封装到这个msg中
         if (msg.callback != null) {
             //1、如果Message的callback不为空，则走handleCallback(msg);场景：Activity implements Callback
+            //此方法是Handler中的一个静态方法，方法体：message.callback.run();只有这一句，可以看出是直接调用的run()方法，没有新建线程，否则也不符合这里线程通信了对吧
             handleCallback(msg);
         } else {
+            //mCallback就是Callback接口的对象，Handler.Callback
             if (mCallback != null) {
                //2
+                //如果返回true直接return结束方法，不再调用handler中的handleMessage方法。
                 if (mCallback.handleMessage(msg)) {
                     return;
                 }
             }
-            //3
+            //3 handler中的消息处理方法
             handleMessage(msg);
         }
     }
+
+Message.java
+Runnable callback;
+ public static Message obtain(Handler h, Runnable callback) {
+        Message m = obtain();
+        m.target = h;
+        m.callback = callback;
+
+        return m;
+    }
+  /** @hide */
+//对应上面的1
+    @UnsupportedAppUsage
+    public Message setCallback(Runnable r) {
+        callback = r;
+        return this;
+    }
+
+Handler.java
+//对应上面的1
+private static void handleCallback(Message message) {
+    message.callback.run();
+}
+handler.post(r)
+public final boolean post(@NonNull Runnable r) {
+    //调用了getPostMessage，将r赋值给Message的Callback，对应1
+       return  sendMessageDelayed(getPostMessage(r), 0);
+    }
+ private static Message getPostMessage(Runnable r) {
+        Message m = Message.obtain();
+        m.callback = r;
+        return m;
+    }
+    
+//对应上面的2 实现Callback接口，复写handleMessage方法
+public interface Callback {
+        /**
+         * @param msg A {@link android.os.Message Message} object
+         * @return True if no further handling is desired
+         */
+        boolean handleMessage(@NonNull Message msg);
+}
+    
+/**
+ * Subclasses must implement this to receive messages.
+ * 继承Handler，对应上面的3
+*/
+public void handleMessage(@NonNull Message msg) {
+}
+
+```
+
+##### 以上三种handlerMessage处理的场景
+
+```java
+
+//1、优先级最高 
+mHandler.post(new Runnable() {
+        @Override
+        public void run() {
+
+        }
+});
+
+//2、直接实现Handler.Callback#handleMessage
+public class MainActivity extends AppCompatActivity implements Handler.Callback {
+
+ 	@Override
+	public boolean handleMessage(@NonNull Message msg) {
+        return false;
+    }
+}
+
+//2、匿名实现Handler.Callback#handleMessage
+//Handler.Callback内部接口：场景2，执行Handler.Callback的handleMessage
+mHandler = new Handler(getMainLooper(), new Handler.Callback() {
+    //Handler.Callback()的handleMessage
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                return false;
+            }
+});
+
+//3、优先级最低 
+class CusHandler extends Handler{
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            //handler的handleMessage
+            super.handleMessage(msg);
+        }
+}
 ```
 
 
 
 #### handler发送消息，入队过程
+
+注意区分几个概念：
+
+当前头部消息mMessage，msg为传递进去的Message，mMessage和msg不是一个，声明的p指向的也是队列的头部Message，跟mMessage指向一样
 
 ```java
   Message message = Message.obtain();
@@ -210,6 +311,7 @@ private boolean enqueueMessage(@NonNull MessageQueue queue, @NonNull Message msg
         }
         return queue.enqueueMessage(msg, uptimeMillis);
     }
+
 MessageQueue.java
 
 /**
@@ -246,14 +348,14 @@ boolean enqueueMessage(Message msg, long when) {
                 // New head, wake up the event queue if blocked.
                 // 把消息插入到消息队列的头部 
                 msg.next = p;
-                //当前消息为msg
+                //当前头部消息为发送过来的msg
                 mMessages = msg;
                 needWake = mBlocked;
             } else {
                 // Inserted within the middle of the queue.  Usually we don't have to wake
                 // up the event queue unless there is a barrier at the head of the queue
                 // and the message is the earliest asynchronous message in the queue.
-                // 根据延迟执行时间排序，根据需要把消息插入到消息队列的合适位置，通常是调用xxxDelay方法，延时发送消息，target=null是屏障消息，为消息屏障的情况则需要唤醒
+                // 根据延迟执行时间排序，根据需要把消息插入到消息队列的合适位置，通常是调用xxxDelay方法，延时发送消息，target=null是屏障消息，通常情况下不需要唤醒事件队列，除非链表的头是一个同步屏障，并且该条消息是第一条异步消息
                 needWake = mBlocked && p.target == null && msg.isAsynchronous();
                 //双向链表
                 Message prev;
@@ -266,11 +368,12 @@ boolean enqueueMessage(Message msg, long when) {
                     if (p == null || when < p.when) {
                         break;
                     }
+                    //如果是true满足上面同步屏障的条件，并且p（该p不是msg）也是异步，那就不需要阻塞，屏障只会拦截后面来的异步消息，在设置屏障之前的异步消息不用管，按照原逻辑处理
                     if (needWake && p.isAsynchronous()) {
                         needWake = false;
                     }
                 }
-                 // 把消息插入到合适位置 
+                 // 把消息插入到合适位置 prev=当前头部消息，p等于合适的位置，最后prev指向了合适的位置p,跟mMessages无关，他还是头部消息，三个概念。
                 msg.next = p; // invariant: p == prev.next
                
                 prev.next = msg;
@@ -280,6 +383,8 @@ boolean enqueueMessage(Message msg, long when) {
            // 如果队列阻塞了，则唤醒 ,相当于唤醒looper中等待的线程（如果是即时消息并且是等待的线程）?
            // nativeWake 写入一个 IO 操作到描述符, nativePollOnce 在某个文件描述符上调用 epoll_wait等待,nativeWake 等同于 Object.notify()，nativePollOnce 大致等同于 Object.wait()
             if (needWake) {
+            //如果发送的是异步消息(是插入的msg,不是p)，并且消息链表第一条消息是同步屏障消息。
+            //或者消息链表中只有刚发送的这一个Message，并且mBlocked为true即，正在阻塞状态，收到一个消息后也进入唤醒
             //这里唤醒 nativePollOnce 的沉睡
                 nativeWake(mPtr);
             }
@@ -590,6 +695,7 @@ public static Message obtain() {
         // Return here if the message loop has already quit and been disposed.
         // This can happen if the application tries to restart a looper after quit
         // which is not supported.
+       // Java层中MessageQueue的mPtr属性，是native层的NativeMessageQueue对象的指针。
         final long ptr = mPtr;
         if (ptr == 0) {
             //从注释可以看出，只有looper被放弃的时候（调用了quit方法）才返回null，mPtr是MessageQueue的一个long型成员变量，关联的是一个在C++层的MessageQueue，阻塞操作就是通过底层的这个MessageQueue来操作的；当队列被放弃的时候其变为0。
@@ -598,6 +704,7 @@ public static Message obtain() {
 
         int pendingIdleHandlerCount = -1; // -1 only during first iteration
         int nextPollTimeoutMillis = 0;
+        //next中取消息会一直获取直到拿到结果，不管结果是什么
         for (;;) {
             if (nextPollTimeoutMillis != 0) {
                 Binder.flushPendingCommands();
@@ -608,6 +715,7 @@ public static Message obtain() {
            //如果nextPollTimeoutMillis>0，最长阻塞nextPollTimeoutMillis毫秒(超时)，如果期间有程序唤醒会立即返回。
             //  nativePollOnce 相当于object.wait()这里陷入沉睡, 等待唤醒对应enqueueMessage的nativeWake（）.nativePollOnce表示消息的处理已完成, 线程正在等待下一个消息.
             //如果队列为空(无返回值), 该方法将一直阻塞直到添加新消息为止
+            //可以从该方法for前面默认值为0看到，第一次进来是不会阻塞，直接唤醒，往下执行，后面会再次计算时间是否超时，如果存在超时记录下超时时间，继续for循环的时候会阻塞等待
             nativePollOnce(ptr, nextPollTimeoutMillis);
 
             synchronized (this) {
@@ -662,16 +770,20 @@ public static Message obtain() {
                 // If first time idle, then get the number of idlers to run.
                 // Idle handles only run if the queue is empty or if the first message
                 // in the queue (possibly a barrier) is due to be handled in the future.
+                //当Message为空，或者当前Message执行时间还未到pendingIdleHandlerCount前面默认可以看到设置值为-1.所以给pendingIdleHandlerCount赋值为mIdleHandlers空闲handles的数量
                 if (pendingIdleHandlerCount < 0
                         && (mMessages == null || now < mMessages.when)) {
                     pendingIdleHandlerCount = mIdleHandlers.size();
                 }
+                //如果不存在闲置的handle，也就是没有Looper.myQueue().addIdleHandler(IdleHandler),表示当前可能没有msg,或者msg没有到执行时间，或者闲置handle为0，这种条件下，阻塞。
+                //继续走for循环，这个时候前面重新计算了nextPollTimeoutMillis，所以nativepollonce会继续阻塞等待唤醒
                 if (pendingIdleHandlerCount <= 0) {
                     // No idle handlers to run.  Loop and wait some more.
                     mBlocked = true;
                     continue;
                 }
 
+                //默认空置handler至少4个.
                 if (mPendingIdleHandlers == null) {
                     mPendingIdleHandlers = new IdleHandler[Math.max(pendingIdleHandlerCount, 4)];
                 }
@@ -686,11 +798,13 @@ public static Message obtain() {
 
                 boolean keep = false;
                 try {
+                    //返回的Boolean值用于下面的判断
                     keep = idler.queueIdle();
                 } catch (Throwable t) {
                     Log.wtf(TAG, "IdleHandler threw exception", t);
                 }
 
+                //如果返回false，则只执行该handler一次，然后移除，如果为true，则为多次，每次都会执行到，没有移除操作
                 if (!keep) {
                     synchronized (this) {
                         mIdleHandlers.remove(idler);
@@ -707,6 +821,51 @@ public static Message obtain() {
         }
     }
 ```
+
+
+
+##### 发送同步屏障
+
+该消息用于阻碍同步Message消息执行，优先执行异步的Message。特点是变量 target 为 null，在 `next()` 方法中有用到。
+
+```java
+ public int postSyncBarrier() {
+        return postSyncBarrier(SystemClock.uptimeMillis());
+    }
+
+    private int postSyncBarrier(long when) {
+        // Enqueue a new sync barrier token.
+        // We don't need to wake the queue because the purpose of a barrier is to stall it.
+        synchronized (this) {
+            final int token = mNextBarrierToken++;
+            final Message msg = Message.obtain();
+            msg.markInUse();
+            msg.when = when;
+            msg.arg1 = token;
+
+            Message prev = null;
+            Message p = mMessages;
+            if (when != 0) {
+                while (p != null && p.when <= when) {
+                    prev = p;
+                    p = p.next;
+                }
+            }
+            if (prev != null) { // invariant: p == prev.next
+                msg.next = p;
+                prev.next = msg;
+            } else {
+                msg.next = p;
+                mMessages = msg;
+            }
+            return token;
+        }
+    }
+```
+
+
+
+
 
 1.当首次进入或所有消息队列已经处理完成，由于此刻队列中没有消息（mMessages为null），这时nextPollTimeoutMillis = -1 ，然后会处理一些不紧急的任务（IdleHandler），之后线程会一直阻塞，直到被主动唤醒（插入消息后根据消息类型决定是否需要唤醒）。
 2.读取列表中的消息，如果发现消息屏障，则跳过后面的同步消息。
@@ -950,7 +1109,7 @@ APP的入口ActivityThread的main方法：如果main方法中没有looper进行�
 
 ## Handler的消息屏障
 
-### 消息的分类
+##### 消息的分类
 
 **Message分为3中：普通消息（同步消息）、屏障消息（同步屏障）和异步消息**。
 
@@ -958,7 +1117,11 @@ APP的入口ActivityThread的main方法：如果main方法中没有looper进行�
 
 源码中例子：`ActivityThread#handleResumeActivity()`中的`viewRootImpl.setView`方法。为了加快UI的渲染。
 
-我们先来了解一下基本的概念
+#### Handler消息机制，
+
+Handler消息机制，在Java层的MessageQueue中，调用了native方法实现消息循环的休眠和唤醒（也就是线程的休眠和唤醒）。native方法nativePollOnce实现了消息循环的休眠，而方法nativeWake实现了消息循环的唤醒。
+
+在native层，消息循环的休眠和唤醒使用了Linux内核的epoll机制和pipe。下面我们简单介绍一下epool机制是什么？
 
 #### 文件描述符fd(句柄)：
 
@@ -966,11 +1129,26 @@ APP的入口ActivityThread的main方法：如果main方法中没有looper进行�
 
 ​    	在linux系统中，设备也是以文件的形式存在，**要对该设备进行操作就必须先打开这个文件**，**打开文件就会获得文件描述符**，它是个很小的正整数。每个进程在PCB（Process Control Block）中保存着一份文件描述符表，文件描述符就是这个表的索引，每个表项都有一个指向已打开文件的指针。文件描述符的优点：兼容POSIX标准，许多Linux和UNIX系统调用都依赖于它。文件描述符的缺点：**不能移植到UNIX以外的系统上去，也不直观。**
 
-#### pipe
+#### pipe（管道）
 
 ​        在Linux上，使用POSIX的condition+mutex，也能完成线程间通知，但是这种方式在linux中用得相对较少，而是`大量使用pipe，创建两个fd(writeFD,readFD)`。当线程1想唤醒线程2的时候，就可以往writeFD中写数据，这样线程2阻塞在readFD中就能返回。
 
   	为何要使用pipe？因为Linux上阻塞的方法就是用select，poll和epoll，其中等待的都是`FD`，那么采用FD这种方式，能够统一调用方法。
+
+​		pipe是Linux中最基本的一种IPC机制，可以用来实现进程、线程间通信
+
+​	**pipe特点：**
+
+- 调用pipe系统函数即可创建一个管道。
+- 其本质是一个伪文件(实为内核缓冲区)。
+- 由两个文件描述符引用，一个表示读端，一个表示写端。
+- 规定数据从管道的写端流入管道，从读端流出。
+
+#### Handler机制中的使用：
+
+首先使用pipe创建两个fd：writeFD、readFD。当线程1想唤醒线程2的时候，就可以往writeFD中写数据，这样线程2阻塞在readFD中就能返回。
+
+也就是说，当文件描述符指向的文件（内核缓冲区）为空时，则线程进行休眠。当另一个线程向缓冲区写入内容时，则将当前线程进行唤醒。
 
 #### Linux上阻塞的方法
 
@@ -988,7 +1166,7 @@ I/O的操作，通过read，我们可以从流中读入数据；通过write，�
 
 #### 缓冲区
 
-​    为了了解阻塞是如何进行的，我们来讨论缓冲区，以及内核缓冲区，最终把I/O事件解释清楚。
+为了了解阻塞是如何进行的，我们来讨论缓冲区，以及内核缓冲区，最终把I/O事件解释清楚。
 
 缓冲区的引入是为了减少频繁I/O操作而引起频繁的系统调用（你知道它很慢的），当你操作一个流时，更多的是以缓冲区为单位进行操作，这是相对于用户空间而言。对于内核来说，也需要缓冲区。
 
@@ -1039,17 +1217,47 @@ while true {
 
 **epoll可以理解为event poll，不同于忙轮询和无差别轮询，epoll会把哪个流发生了怎样的I/O事件通知我们。此时我们对这些流的操作都是有意义的。（复杂度降低到了O(1)）**
 
-**`epoll`支持四类事件: EPOLLIN(句柄可读)、EPOLLOUT(句柄可写),EPOLLERR(句柄错误)、EPOLLHUP(句柄断)。**
+**`epoll`支持四类事件: **
+
+> EPOLLIN(句柄可读)、
+>
+> EPOLLOUT(句柄可写),
+>
+> EPOLLERR(句柄错误)、
+>
+> EPOLLHUP(句柄断)。
 
  在讨论epoll的实现细节之前，先把`epoll`的相关操作列出：
 
-- `epoll_create `创建一个`epoll`对象，一般`epollfd = epoll_create()`
-- `epoll_ctl` （`epoll_add/epoll_del`的合体），往`epoll`对象中增加/删除某一个流的某一个事件
+- `epoll_create(int size) `
+
+  创建一个`epoll`对象，该方法生成一个epoll专用的文件描述符。它其实是在内核申请一空间，用来存放你想关注的fd上是否发生以及发生了什么事件；size就是你在这个epoll fd上能关注的最大fd数。例如：epfd= epoll_create(10)。
+
+- `epoll_ctl(int epfd, int op, int fd, struct epoll_event * event)` 
+  
+  用于控制epoll文件描述符上的事件，可以注册事件，修改事件，删除事件。（`epoll_add/epoll_del`的合体），往`epoll`对象中增加/删除某一个流的某一个事件。
+  
+  1、epfd：由epoll调用产生的文件描述符（epoll_create的返回值）；
+  2、op：操作的类型。例如注册事件，可能的取值EPOLL_CTL_ADD（注册）、EPOLL_CTL_MOD（修改）、  EPOLL_CTL_DEL（删除）；
+  3、fd：op实施的对象（关联的文件描述符）；
+  4、event：事件类型（指向epoll_event的指针）；
+  5、如果调用成功返回0，失败返回-1。
+  
   - `epoll_ctl(epollfd, EPOLL_CTL_ADD, socket, EPOLLIN);`//注册缓冲区非空事件，即有数据流入
   - `epoll_ctl(epollfd, EPOLL_CTL_DEL, socket, EPOLLOUT);`//注册缓冲区非满事件，即流可以被写入
-- `epoll_wait(epollfd,...)`等待直到注册的事件发生
+  - `epoll_ctl(epollfd, EPOLL_CTL_MOD, socket, EPOLLOUT);`//修改缓冲区非满事件，即流可以被修改
+  
+- `epoll_wait(int epfd, struct epoll_event * events, intmaxevents, int timeout)`：等待直到注册的事件发生
+
+  1、参数events用来从内核得到事件的集合。
+  2、maxevents告之内核这个events有多大(数组成员的个数)。
+  3、参数timeout是超时时间（毫秒）。0表示立即返回，-1表示永久阻塞）。
+  4、该函数返回需要处理的事件数目，如返回0表示已超时。
+  5、返回的事件集合在events数组中，数组中实际存放的成员个数是函数的返回值。
 
 （注：当对一个非阻塞流的读写发生缓冲区满或缓冲区空，write/read会返回-1，并设置errno=EAGAIN。而epoll只关心缓冲区非满和缓冲区非空事件。）
+
+需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，可以在linux下/proc/进程id/fd/看到这个fd，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。
 
 一个epoll模式的代码大概的样子是：
 
@@ -1062,7 +1270,24 @@ while true {
 }
 ```
 
+##### 总结：
 
+1、Handler消息机制，在Java层的MessageQueue中，调用了native方法实现消息循环的休眠和唤醒（也就是线程的休眠和唤醒）。native方法nativePollOnce实现了消息循环的休眠，而方法nativeWake实现了消息循环的唤醒。
+2、在native层，消息循环的休眠和唤醒使用了Linux内核的epoll机制和pipe。
+3、在Linux系统内核中，所有执行I/O操作的系统调用都会通过文件描述符。内核利用文件描述符来访问文件，文件描述符是非负整数。
+4、pipe是Linux中最基本的一种IPC机制，可以用来实现进程、线程间通信。
+5、pipe其本质是一个伪文件(实为内核缓冲区) ，它有两个文件描述符引用，一个表示读端，一个表示写端，规定数据从管道的写端流入管道，从读端流出。
+6、Handler机制中，底层使用pipe创建两个fd：writeFD、readFD。当线程A想唤醒线程B的时候，就可以往writeFD中写数据，这样线程B阻塞在readFD中就能返回。 也就是说，当文件描述符指向的文件（内核缓冲区）为空时，则线程进行休眠。当另一个线程向缓冲区写入内容时，则将当前线程进行唤醒。
+7、epoll机制是Linux最高效的I/O复用机制，在一处等待多个文件句柄的I/O事件。
+8、nativeInit()方法是一个native方法，它返回了一个int值，作为native层在Java层的一个指针引用。
+9、Java层中MessageQueue的mPtr属性，是native层的NativeMessageQueue对象的指针。
+10、native层也对应了一套Handler机制相关的类：Looper、MessageQueue、MessageHandler、Message，它们与Java层相对应。
+11、NativeMessageQueue构造函数中，获取一个线程的Looper对象，如果不存在在创建一个，并关联到线程。这个操作跟Java层非常类似，不过Java层是Looper创建了MessageQueue，而native层正好相反。
+12、Looper构造函数中，初始化了一个管道，用于唤醒Looper。mWakeEventFd是一个android::base::unique_fd类型，它的内部实现了pipe管道的创建。
+13、rebuildEpollLocked()方法负责创建一个epoll对象，然后将文件描述符事件添加到epoll监控，这里添加的是可读事件，当文件流可读时，则唤醒线程。
+14、Looper对象的pollOnce方法实现线程的休眠操作，它的内部也定义了一个无限for循环，来处理native层的事件，以及通过epoll监控的文件描述符相关事件。
+15、线程唤醒操作，是Looper的wake方法实现的，它只是向文件描述符mWakeEventFd中，写入数据1即可。
+16、线程唤醒后，调用awoken方法，清空文件描述符mWakeEventFd中的数据，以便重新使用。
 
 #### `nativePollOnce` 是什么
 
@@ -1115,3 +1340,4 @@ https://blog.csdn.net/chenbaige/article/details/79473475)
 
 [Android 中 MessageQueue 的 nativePollOnce ](https://www.cnblogs.com/jiy-for-you/p/11707356.html)
 
+[Android Q消息循环：休眠、唤醒的底层原理及native层源码分析](https://blog.csdn.net/u011578734/article/details/106241075)

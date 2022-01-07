@@ -22,6 +22,8 @@
 ### 本地预览
 
 > docsify serve docs
+>
+> http://localhost:3000
 
 ### [代码高亮](https://docsify.js.org/#/zh-cn/language-highlight)
 搜索，注意版本号和替换问题
