@@ -28,7 +28,8 @@ List<String> arrayList = new ArrayList<String>();
 //arrayList.add(100); 在编译阶段，编译器就会报错
 ```
 ## 3. 特性
-泛型只在编译阶段有效。看下面的代码：
+**泛型擦出：**泛型只在编译阶段有效。看下面的代码：
+
 ```java
 List<String> stringArrayList = new ArrayList<String>();
 List<Integer> integerArrayList = new ArrayList<Integer>();
@@ -41,9 +42,10 @@ if(classStringArrayList.equals(classIntegerArrayList)){
 }
 ```
 输出结果：`D/泛型测试: 类型相同。`
-通过上面的例子可以证明，在编译之后程序会采取去泛型化的措施。也就是说Java中的泛型，只在编译阶段有效。在编译过程中，正确检验泛型结果后，会将泛型的相关信息擦出，并且在对象进入和离开方法的边界处添加类型检查和类型转换的方法。也就是说，泛型信息不会进入到运行时阶段。
+通过上面的例子可以证明，在编译之后程序会采取去泛型化的措施。也就是说Java中的泛型，只在编译阶段有效。在编译过程中，正确检验泛型结果后，会将泛型的相关信息擦除，并且在对象进入和离开方法的边界处添加类型检查和类型转换的方法。也就是说，泛型信息不会进入到运行时阶段。
 
 **对此总结成一句话：泛型类型在逻辑上看以看成是多个不同的类型，实际上都是相同的基本类型。**
+
 ## 4. 泛型的使用
 泛型有三种使用方式，分别为：**泛型类、泛型接口、泛型方法**
 4.3 泛型类
@@ -91,6 +93,7 @@ Log.d("泛型测试","key is " + genericString.getKey());
 ```
 定义的泛型类，就一定要传入泛型类型实参么？并不是这样，在使用泛型的时候如果传入泛型实参，则会根据传入的泛型实参做相应的限制，此时泛型才会起到本应起到的限制作用。如果不传入泛型类型实参的话，在泛型类中使用泛型的方法或成员变量定义的类型可以为任何的类型。
 看一个例子：
+
 ```java
 Generic generic = new Generic("111111");
 Generic generic1 = new Generic(4444);
@@ -165,7 +168,7 @@ showKeyValue(gNumber);
 // cannot be applied to Generic<java.lang.Number>
 // showKeyValue(gInteger);
 ```
-通过提示信息我们可以看到Generic<Integer>不能被看作为`Generic<Number>的子类。由此可以看出:**同一种泛型可以对应多个版本（因为参数类型是不确定的），不同版本的泛型类实例是不兼容的。**
+通过提示信息我们可以看到Generic<Integer>不能被看作为Generic<Number>的子类。由此可以看出:**同一种泛型可以对应多个版本（因为参数类型是不确定的），不同版本的泛型类实例是不兼容的。**
 
 回到上面的例子，如何解决上面的问题？总不能为了定义一个新的方法来处理Generic<Integer>类型的类，这显然与java中的多台理念相违背。因此我们需要一个在逻辑上可以表示同时是Generic<Integer>和Generic<Number>父类的引用类型。由此类型通配符应运而生。
 

@@ -4,7 +4,7 @@
 ### [Handler消息Message屏障消息](https://blog.csdn.net/mirkowug/article/details/115091337){docsify-ignore}
 ## WMS流程
 ![image.png](https://upload-images.jianshu.io/upload_images/2981395-f7a58d93a63d10b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-```
+```java
 1、System.core.init.cpp文件的main方法
 
 2、main方法会有LoadBootScripts()加载init.rc文件
@@ -50,7 +50,7 @@
 ### ActivityThread#handleLaunchActivity()
 1、初始化WMS服务
 2、调用performLaunchActivity()
-```
+```java
  public Activity handleLaunchActivity(ActivityClientRecord r,
             PendingTransactionActions pendingActions, Intent customIntent) {
 1、初始化WMS服务，initialize()内部会调用getWindowManagerService()拿到wms的远程代理Binder。IWindowManagerImpl extends IWindowManager.Default 
@@ -76,7 +76,7 @@
 
 
 创建ContextImpl ，给到Activity进行attach，context的实现类ContextWrap，实际上内部是用ContextImpl 调用。
-```
+```java
 1、创建Activity的context上下文对象
 ContextImpl appContext = createBaseContextForActivity(r);
 
@@ -116,7 +116,7 @@ if (r.isPersistable()) {
 ```
 
 #### 接着看Activity#.attach()方法
-```
+```java
 final void attach(Context context, ActivityThread aThread,
             Instrumentation instr, IBinder token, int ident,
             Application application, Intent intent, ActivityInfo info,
@@ -156,7 +156,7 @@ setContentCaptureOptions(application.getContentCaptureOptions());
 ```
 ## Activity#setContentView()
 * 最终调用PhoneWindow#setContentView()
-```
+```java
 @Override
 public void onCreate(Bundle savedInstanceState) {
 1、super.onCreate-》setContentView开始调用
@@ -173,7 +173,7 @@ public void onCreate(Bundle savedInstanceState) {
 ## PhoneWindow#setContentView()
 * 创建DecorView
 * 将Activity的XML布局加载到DecorView中
-```
+```java
  @Override
     public void setContentView(int layoutResID) {
         // Note: FEATURE_CONTENT_TRANSITIONS may be set in the process of installing the window
@@ -211,7 +211,7 @@ public void onCreate(Bundle savedInstanceState) {
 ```
 ## PhoneWindow#installDecor()
 
-```
+```java
 private void installDecor() {
         mForceDecorInstall = false;
 1、 创建DecorView
@@ -304,7 +304,7 @@ mDecor.startChanging();
 * 回调Activity#onResume()
 * 获取PhoneWindow和DecorView，将Activity与DecorView绑定
 * 调用WindowManageImpl#addView()将DecorView传入
-```
+```java
 public void handleResumeActivity(IBinder token, boolean finalStateRequest, 
                                  boolean isForward, String reason) {
 
@@ -347,7 +347,7 @@ public void handleResumeActivity(IBinder token, boolean finalStateRequest,
 ```
 
 ### WindowManagerImpl#addView()
-```
+```java
 public void addView(@NonNull View view, @NonNull ViewGroup.LayoutParams params) {
     //WindowManagerGlobal#addView()    
     mGlobal.addView(view, params, mContext.getDisplayNoVerify(), mParentWindow,
@@ -359,7 +359,8 @@ public void addView(@NonNull View view, @NonNull ViewGroup.LayoutParams params) 
 ### WindowManagerGlobal#addView()
 创建ViewRootImpl
 将DecorView交给ViewRootImpl处理
-```
+
+```java
 public void addView(View view, ViewGroup.LayoutParams params,
         Display display, Window parentWindow, int userId) {
 
@@ -403,7 +404,8 @@ public void setView(View view, WindowManager.LayoutParams attrs,
 }
 
 ```
-###ViewRootImpl#requestLayout()
+### ViewRootImpl#requestLayout()
+
 ```
 public void requestLayout() {
     if (!mHandlingLayoutInLayoutRequest) {
@@ -512,7 +514,7 @@ private void performTraversals() {
     performDraw();
 }
 
-```
+ ```
 
 ### ViewRootImpl#performMeasure()
  ```
@@ -524,7 +526,7 @@ private void performMeasure(int childWidthMeasureSpec, int childHeightMeasureSpe
     mView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
 }
 
-```
+ ```
 ### ViewRootImpl#performLayout()
 ```
 private void performLayout(WindowManager.LayoutParams lp, int desiredWindowWidth,
