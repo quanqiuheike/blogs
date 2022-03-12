@@ -1,0 +1,9 @@
+
+
+https://www.freesion.com/article/34001324386/
+
+针对此次的更新，ViewPager2主要有以下一些特性：
+
+1. 目前ViewPager2对Fragment支持只能用FragmentStateAdapter，FragmentStateAdapter在遇到预加载时，只会创建Fragment对象，不会把Fragment真正的加入到布局中，所以自带懒加载效果；
+2. FragmentStateAdapter不会一直保留Fragment实例，回收的ItemView也会移除Fragment，所以得做好Fragment重建后恢复数据的准备；
+3. FragmentStateAdapter在遇到offscreenPageLimit>0时，处理离屏Fragment和可见Fragment没有什么区别，所以无法通过setUserVisibleHint判断显示与否；

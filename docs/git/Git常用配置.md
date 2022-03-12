@@ -7,6 +7,7 @@
 为单一的仓库配置用户名和邮箱的命令分别为：
 `git config user.name "username"`
 `git config user.email "email"。`
+
 ### 查看
 ```
 user：git config --global user.name
@@ -45,8 +46,17 @@ ssh-keygen -t rsa -C 1831814662@qq.com
 ```bash
 cat ~/.ssh/id_rsa.pub
 ```
+### 打开公钥所在文件夹
+
+```bash
+open ~/.ssh
+```
+
+找到并打开`id_rsa.pub`文件，全选其中的内容粘贴到网页的Key中。
+
 ### 查看配置是否正确
+
 ```bash
  ssh -T git@github.com
- ```
- 
+```
+
