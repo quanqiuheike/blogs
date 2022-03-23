@@ -81,3 +81,88 @@ Shift + b(back)上一页
  `Ctrl + c`强制推出当前操作
  `Command + K`清屏
 
+
+
+### Mac常用技巧
+
+##### 1、如何查看Mac的Java_home地址
+
+```shell
+// 进到lib目录
+cd /usr/libexec
+
+// 运行java_home即可
+./java_home
+```
+
+##### 2、Mac如何查看git安装目录
+
+```shell
+// 输入命令即可查看到安装路径
+which git
+//举一反三
+which java 
+```
+
+##### 3、Mac查看sshkey
+
+```shell
+// 列出所有ssh文件夹的内容
+ls -a ~/.ssh
+
+// 查看SSH的KEY值   退出vim编辑：先输入esc，再输入： 再输入wq
+ vim ~/.ssh/id_rsa.pub 
+
+//举一反三，打开任意文件夹下的文件列表
+ls -a ~/任意文件名
+
+```
+
+##### 4、Mac编辑.bash_profile
+
+```shell
+// 输入
+cd ~
+
+// 创建.bash_profile
+touch .bash_profile
+
+// 编辑.bash_profile文件
+open -e .bash_profile
+
+// 更新刚配置的环境变量
+source .bash_profile
+
+// 查看是否生效
+echo $PATH
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

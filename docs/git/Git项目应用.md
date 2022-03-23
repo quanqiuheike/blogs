@@ -1,3 +1,11 @@
+#### Git常见命令
+
+##### git branch 分支name
+
+##### git checkout 分支name
+
+
+
 ### 1、…or create a new repository on the command line
 
 #### 创建新的Git仓库命令
