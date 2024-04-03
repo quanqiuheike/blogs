@@ -14,6 +14,8 @@
 >
 >  git status 查看本地状态
 >
+>  git add . 将修改的文件添加到本地仓库
+>
 >  git commit -m "commit msg" 提交代码到本地仓库
 >
 >  git push 本地推送到远程
