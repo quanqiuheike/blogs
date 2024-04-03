@@ -280,6 +280,7 @@ git branch -dr
 **增加一个新的远程仓库，并命名**
 
 `git remote add [shortname] [url]`
+1`git remote add origin git@github.com:quanqiuheike/blog.git`
 
 **取回远程仓库的变化，并与本地分支合并**
 
@@ -369,9 +370,9 @@ git add README.md
 git commit -m "first commit"
 
 git branch -M main
-
+<!-- 将远程分支 origin 添加到本地 Git 仓库中，并将其与远程分支保持一致 -->
 git remote add origin git@github.com:quanqiuheike/CC.git
-
+<!-- 命令用于将本地分支 main 的更新推送到远程分支 origin/main -->
 git push -u origin main
 ```
 
@@ -379,7 +380,7 @@ git push -u origin main
 
 ```
 git remote add origin git@github.com:quanqiuheike/CC.git
-
+<!-- 命令用于将本地分支 main 重命名为 main。这个命令通常用于将本地分支 main 与远程分支 main 保持一致，或者在创建新的本地分支时，需要将本地分支名称设置为 main。 -->
 git branch -M main
 
 git push -u origin main
