@@ -27,7 +27,8 @@
 > ### 初始化项目  
 >
 > 如果想在项目的 ./docs 目录里写文档，直接通过 init 初始化项目。
-> ```docsify serve docs```
+
+> ```docsify init ./docs```
 
 ### 本地预览
 
