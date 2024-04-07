@@ -43,7 +43,10 @@ git remote set-url origin(远程仓库名称) https://email/username/ProjectName
 * 步骤2 :
 
 `ssh-keygen -t ed25519 -C "your_email@example.com"`
-
+`ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"`
+ssh-keygen -t ed25519 -f ~/.ssh/github cuowu
+Saving key "ssh-keygen -t ed25519 -f ~/.ssh/github" failed: No such file or directory
+`ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com" -f "github_ed25519"`生成的目录未知
 > Note: If you are using a legacy system that doesn't support the Ed25519 algorithm, use:
 
  `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
