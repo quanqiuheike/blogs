@@ -56,6 +56,8 @@
      ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_second -C "1831814662@qq.com"
      
      ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_1831814662 -C "1831814662@qq.com"
+
+     ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_cqxengineer -C "cqxengineer@gmail.com"
      
      ```
 
@@ -106,9 +108,9 @@
          IdentityFile ~/.ssh/id_ed25519
      
      
-     Host github.com
+     Host chengengineer
          HostName github.com
-         User engineer
+         User chengengineer
          IdentityFile ~/.ssh/id_ed25519
      ```
 
@@ -126,10 +128,10 @@
          User 1831814662
          IdentityFile ~/.ssh/id_ed25519_second
          
-     Host github-second
+     Host quanqiuheike
          HostName github.com
-         User 1831814662
-         IdentityFile ~/.ssh/id_ed25519_1831814662
+         User quanqiuheike
+         IdentityFile ~/.ssh/id_ed25519_cqxengineer
      ```
 
 ### 步骤 6: 测试连接
@@ -140,6 +142,8 @@
 
      ```
      ssh -T git@github.com
+
+     ssh -T git@chengengineer
      ```
 
 2. **测试第二个GitHub账号：**
@@ -150,6 +154,8 @@
      ssh -T git@github-second
      
      ssh -T git@github-1831814662
+
+     ssh -T git@quanqiuheike
      ```
 
 3. **确认连接：**
