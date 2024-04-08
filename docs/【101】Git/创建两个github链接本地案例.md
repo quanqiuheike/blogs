@@ -366,4 +366,15 @@ bashCopy codessh -T git@github-second
 现在，你的 Mac 电脑上已经配置了两个 GitHub 账号，并且每个账号都有自己的 SSH 密钥对。
 
 
-  
+### 邮箱变更后配置本地邮箱和用户名
+```
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+git config --global user.name "quanqiuheike"
+git config --global user.email "cqxengineer@gmail.com"
+
+<!-- 查看当前全局Git配置：确保其中的 user.email 和 user.name 设置为您当前要提交代码的GitHub账户的信息。-->
+git config --global --list
+
+```
