@@ -19,7 +19,7 @@ email：git config user.email
 ```
 ---
 
-### 查看当前的 remotegit remote -v 
+### 查看当前的 git remote -v 
 ```bash
 origin  https://github.com/yourUserName/ProjectName.git (fetch)
 origin  https://github.com/yourUserName/ProjectName.git (push)
@@ -71,6 +71,7 @@ Warning: Permanently added 'github.com,20.205.243.166' (ECDSA) to the list of kn
 Everything up-to-date
  ```
 
+
 * 可以通过`ping github.com`确认ip是否为github的官网
 
 ```java
@@ -94,8 +95,19 @@ Everything up-to-date
 
 ​    最短 = 82ms，最长 = 86ms，平均 = 83ms
 ```
+C:\Users\chengqiuxia\.ssh
+ssh-keygen -t rsa -b 4096 -f /c/Users/chengqiuxia/.ssh/github
 
+### 在指定的C盘自定义目录和文件名生成ssh公钥私钥
+`ssh-keygen -t rsa -b 4096 -f "C:\Users\chengx\.ssh\github"`
+`ssh-keygen -t rsa -b 4096 -f "C:\custom\path\your_key_name"`
+* -t rsa：指定生成RSA密钥对。
+* -b 4096：指定密钥的比特长度为4096位。你也可以选择其他长度。
+* -f "C:\custom\path\your_key_name"：指定自定义路径和文件名。将C:\custom\path\替换为你希望的目录，将your_key_name替换为你希望的文件名。在Windows路径中，反斜杠\需要用双引号"括起来。
 
+### 通过命令获取生成的公钥内容
+`type "C:\custom\path\your_key_name.pub"`
+`type C:\Users\chengx\.ssh\github`
 ---
 
 ###  SSH生成密钥(以下为老版本的使用)
