@@ -374,7 +374,8 @@ git config --global user.email "your.email@example.com"
 git config --global user.name "quanqiuheike"
 git config --global user.email "cqxengineer@gmail.com"
 
-<!-- 查看当前全局Git配置：确保其中的 user.email 和 user.name 设置为您当前要提交代码的GitHub账户的信息。-->
+<!-- 查看当前全局Git配置：确保其中的 user.email 和 user.name 设置为您当前要提交代码的GitHub账户的信息。
+-->
 git config --global --list
 
 ```
