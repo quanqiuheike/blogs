@@ -80,10 +80,9 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
      ssh-keygen -t ed25519 -f /c/Users/YourUsername/.ssh/id_ed25519_second -C "your_second_email@example.com"
 
      ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_cqxengineer -C "cqxengineer@gmail.com"
-     
      ```
 
-     > 将`YourUsername`替换为你的Windows用户名，`your_second_email@example.com`替换为你的第二个GitHub账号注册邮箱。
+   > 将`YourUsername`替换为你的Windows用户名，`your_second_email@example.com`替换为你的第二个GitHub账号注册邮箱。
 
 ### 步骤 4: 添加第二个SSH密钥到GitHub账号
 
