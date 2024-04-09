@@ -12,8 +12,7 @@
 
    - 运行以下命令来生成第一个SSH密钥对：
 
-     ```
-     
+    ```
      ssh-keygen -t ed25519 -C "your_email@example.com"
      
      ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
@@ -23,10 +22,10 @@
      ssh-keygen -t ed25519 -C "cqxengineer@gmail.com"
 
      /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
-     ```
+    ```
 
-   > 将`your_email@example.com`替换为你的第一个GitHub账号注册邮箱。
-   
+    > 将`your_email@example.com`替换为你的第一个GitHub账号注册邮箱。
+
    - 输入该命令后会出现该提示
   ```
   Generating public/private ed25519 key pair.
@@ -38,16 +37,15 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
 
    - 完整案例可以参考为
   ```
-      $ ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
+    $ ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
     Generating public/private ed25519 key pair.
     Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
-  ```
+  
 
     `/c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer`
 
     `/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike`
-
-
+  ```
 
 ### 步骤 2: 添加第一个SSH密钥到GitHub账号
 
@@ -80,8 +78,6 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
 
      ```
      ssh-keygen -t ed25519 -f /c/Users/YourUsername/.ssh/id_ed25519_second -C "your_second_email@example.com"
-     
-     ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_1831814662 -C "1831814662@qq.com"
 
      ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_cqxengineer -C "cqxengineer@gmail.com"
      
@@ -98,7 +94,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
      ```
      cat /c/Users/chengqiuxia/.ssh/id_ed25519_second.pub
      
-     cat /c/Users/chengqiuxia/.ssh/id_ed25519_1831814662.pub
+     cat /c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer.pub
      ```
 
    - 复制输出的公钥内容，以备后用。
@@ -137,7 +133,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
      Host chengengineer
          HostName github.com
          User chengengineer
-         IdentityFile ~/.ssh/id_ed25519
+         IdentityFile ~/.ssh/id_ed25519_chengengineer
      ```
 
    - 添加以下内容用于配置第二个GitHub账号：
@@ -151,7 +147,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
      
      Host github-second
          HostName github.com
-         User 1831814662
+         User git
          IdentityFile ~/.ssh/id_ed25519_second
          
      Host quanqiuheike
@@ -185,7 +181,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
      ```
      ssh -T git@github-second
      
-     ssh -T git@github-1831814662
+     ssh -T git@github-chengengineer
 
      ssh -T git@quanqiuheike
      ```
@@ -211,6 +207,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
    需要将git@github.com改为git@quanqiuheike或者直接是quanqiuheike即可
 
    git remote set-url origin git@quanqiuheike:quanqiuheike/blogs.git
+   git remote set-url origin quanqiuheike:quanqiuheike/blogs.git
    ```
 
 
@@ -401,7 +398,7 @@ Host github-second
 1. 测试第一个 GitHub 账号是否配置成功：
 
 ```
-bashCopy codessh -T git@github.com
+  ssh -T git@github.com
 ```
 
 如果成功，会显示你的 GitHub 用户名。
@@ -409,7 +406,7 @@ bashCopy codessh -T git@github.com
 1. 测试第二个 GitHub 账号是否配置成功：
 
 ```
-bashCopy codessh -T git@github-second
+  ssh -T git@github-second
 ```
 
 同样，如果成功，会显示你的 GitHub 用户名。
