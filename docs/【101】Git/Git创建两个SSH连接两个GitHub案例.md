@@ -41,7 +41,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
     Generating public/private ed25519 key pair.
     Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
   ```
-  
+
     `/c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer`
 
     `/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike`
@@ -199,6 +199,11 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
   - 或者：
   ```
    Git 最著名报错 “ERROR: Permission to XXX.git denied to user”解决方案
+
+   ERROR: Permission to quanqiuheike/blogs.git denied to chengengineer. 
+   fatal: Could not read from remote repository.Please make sure you have the correct access rights and the repository exists.
+
+
   ```
   - 需要根据在.ssh配置的别名，重新更改远程的URL
   - 通过`git remote -v`获取远程ssh地址,将git@github.com改为git@别名或者别名
