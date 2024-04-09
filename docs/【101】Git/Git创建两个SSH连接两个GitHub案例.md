@@ -196,17 +196,19 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
     git@github.com: Permission denied (publickey).
     fatal: Could not read from remote repository.
   ```
+
   - 或者：
+
   ```
    Git 最著名报错 “ERROR: Permission to XXX.git denied to user”解决方案
 
    ERROR: Permission to quanqiuheike/blogs.git denied to chengengineer. 
    fatal: Could not read from remote repository.Please make sure you have the correct access rights and the repository exists.
-
-
   ```
+
   - 需要根据在.ssh配置的别名，重新更改远程的URL
   - 通过`git remote -v`获取远程ssh地址,将git@github.com改为git@别名或者别名
+
    ```
    原本的为：git@github.com:quanqiuheike/blogs.git
    需要将git@github.com改为git@quanqiuheike或者直接是quanqiuheike即可
@@ -214,8 +216,8 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
    git remote set-url origin git@quanqiuheike:quanqiuheike/blogs.git
    git remote set-url origin quanqiuheike:quanqiuheike/blogs.git
    ```
-  **clone、pull、push遇到的问题 **
-    - clone 
+  ** clone、pull、push遇到的问题 **
+  - clone 
     ```
     git clone git@github.com:quanqiuheike/blogs.git
     git clone git@quanqiuheike:quanqiuheike/blogs.git
