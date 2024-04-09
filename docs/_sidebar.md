@@ -1,12 +1,12 @@
 
 * 【01】java筑基
-  * [Java设计模式](【01】java筑基/Java设计模式/_sidebar.md) 
-    * [Java设计模式_创建型模式](【01】java筑基/Java设计模式/Java设计模式_创建型模式.md)
-    * [Java设计模式_结构型模式](【01】java筑基/Java设计模式/Java设计模式_结构型模式.md)
-    * [Java设计模式_行为型模式](【01】java筑基/Java设计模式/Java设计模式_行为型模式.md)
-  * [Java基础进阶-泛型](【01】java筑基/Java基础进阶-泛型.md)
-  * [Java高级语言特性注解与反射.md](【01】java筑基/Java高级语言特性注解与反射.md)
-  * [Retrofit中的注解反射与动态代理](【01】java筑基/Retrofit中的注解反射与动态代理.md)
+  * [Java设计模式](/【01】java筑基/Java设计模式/_sidebar.md) 
+    * [Java设计模式_创建型模式](/【01】java筑基/Java设计模式/Java设计模式_创建型模式.md)
+    * [Java设计模式_结构型模式](/【01】java筑基/Java设计模式/Java设计模式_结构型模式.md)
+    * [Java设计模式_行为型模式](/【01】java筑基/Java设计模式/Java设计模式_行为型模式.md)
+  * [Java基础进阶-泛型](/【01】java筑基/Java基础进阶-泛型.md)
+  * [Java高级语言特性注解与反射.md](/【01】java筑基/Java高级语言特性注解与反射.md)
+  * [Retrofit中的注解反射与动态代理](/【01】java筑基/Retrofit中的注解反射与动态代理.md)
   
 * 【02】kotlin
   * [Kotlin基础一](/【02】kotlin/Kotlin基础一.md)
