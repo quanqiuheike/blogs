@@ -320,13 +320,13 @@ Host github-second
 
 ### 步骤四：验证配置是否成功
 
-1. 测试第一个 GitHub 账号是否配置成功：
+* 1. 测试第一个 GitHub 账号是否配置成功：
 
 ```
 ssh -T git@github.com
 ```
 
-1. 测试第二个 GitHub 账号是否配置成功：
+* 2. 测试第二个 GitHub 账号是否配置成功：
 
 ```
 ssh -T git@github-second
