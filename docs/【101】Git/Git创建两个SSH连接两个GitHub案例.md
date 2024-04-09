@@ -214,7 +214,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
    git remote set-url origin git@quanqiuheike:quanqiuheike/blogs.git
    git remote set-url origin quanqiuheike:quanqiuheike/blogs.git```
    
-  ** clone、pull、push遇到的问题 **
+  **clone、pull、push遇到的问题 **
   - clone 
     ```
     git clone git@github.com:quanqiuheike/blogs.git
