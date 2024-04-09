@@ -237,7 +237,7 @@ ssh -T git@quanqiuheike
 
 
 
-### PUSH推送提交异常经典问题
+### 步骤7：PUSH推送提交异常经典问题
 
 - 如果SSH正常添加到github，本地git@<github.com此处看是否为别名>
 
@@ -257,6 +257,9 @@ ERROR: Permission to quanqiuheike/blogs.git denied to chengengineer.
 fatal: Could not read from remote repository.Please make sure you have the correct access rights and the repository exists.
 ```
 
+* 如果是新建的仓库，直接使用替换后的URL克隆即可。
+* 如果已经使用原地址克隆过了，可以使用命令修改
+
 - 需要根据在.ssh配置的别名，重新更改远程的URL
 
 -  通过`git remote -v`获取远程ssh地址,将git@github.com改为git@别名或者别名
@@ -273,7 +276,7 @@ git remote set-url origin quanqiuheike:quanqiuheike/blogs.git
 
 
 
-####   clone、pull、push遇到的问题 
+#### :Clone、Pull、Push遇到的问题 
 
 -  **clone** 
 
