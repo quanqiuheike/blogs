@@ -13,23 +13,21 @@
    - 运行以下命令来生成第一个SSH密钥对：
 
      ```
+     
      ssh-keygen -t ed25519 -C "your_email@example.com"
      
      ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
 
      /c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer
 
-
      ssh-keygen -t ed25519 -C "cqxengineer@gmail.com"
 
      /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
-
-     
-
      ```
 
-     > 将`your_email@example.com`替换为你的第一个GitHub账号注册邮箱。
-  - 输入该命令后会出现该提示
+   > 将`your_email@example.com`替换为你的第一个GitHub账号注册邮箱。
+   
+   - 输入该命令后会出现该提示
   ```
   Generating public/private ed25519 key pair.
 Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\githubkey
@@ -37,14 +35,17 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
 格式比如：C:\foldername\keyname
 或者直接复制提示的格式更改文件名即可：/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
   ```
-  - 完整案例可以参考为
+
+   - 完整案例可以参考为
   ```
-  $ ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
+      $ ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
+    Generating public/private ed25519 key pair.
+    Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
   ```
-`/c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer`
-`/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike`
+
+    `/c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer`
+
+    `/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike`
 
 
 
@@ -79,9 +80,6 @@ Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/U
 
      ```
      ssh-keygen -t ed25519 -f /c/Users/YourUsername/.ssh/id_ed25519_second -C "your_second_email@example.com"
-     
-     
-     ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_second -C "1831814662@qq.com"
      
      ssh-keygen -t ed25519 -f /c/Users/chengqiuxia/.ssh/id_ed25519_1831814662 -C "1831814662@qq.com"
 
@@ -211,7 +209,7 @@ Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/U
    ```
    原本的为：git@github.com:quanqiuheike/blogs.git
    需要将git@github.com改为git@quanqiuheike或者直接是quanqiuheike即可
-   
+
    git remote set-url origin git@quanqiuheike:quanqiuheike/blogs.git
    ```
 
