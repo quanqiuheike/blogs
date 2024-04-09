@@ -16,6 +16,13 @@
      ssh-keygen -t ed25519 -C "your_email@example.com"
      
      ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
+
+     ssh-keygen -t ed25519 -C "cqxengineer@gmail.com"
+
+     /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
+
+     /c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer
+
      ```
 
      > 将`your_email@example.com`替换为你的第一个GitHub账号注册邮箱。
