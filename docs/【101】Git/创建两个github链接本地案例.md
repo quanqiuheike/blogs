@@ -13,12 +13,30 @@
    - 运行以下命令来生成第一个SSH密钥对：
 
      ```
-     bashCopy codessh-keygen -t ed25519 -C "your_email@example.com"
+     ssh-keygen -t ed25519 -C "your_email@example.com"
      
      ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
      ```
 
      > 将`your_email@example.com`替换为你的第一个GitHub账号注册邮箱。
+  - 输入该命令后会出现该提示
+  ```
+  Generating public/private ed25519 key pair.
+Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\githubkey
+可以再该提示后面输入想要的路径和密钥对名字，输入路径：比如 I:\ssh\github，其中githubkey是密钥对名字，ssh作为文件夹是需要创建好存在的，githubkey文件是自动创建
+格式比如：C:\foldername\keyname
+或者直接复制提示的格式更改文件名即可：/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
+  ```
+  - 完整案例可以参考为
+  ```
+  $ ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
+  ```
+`/c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer`
+`/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike`
+
+
 
 ### 步骤 2: 添加第一个SSH密钥到GitHub账号
 
@@ -144,6 +162,8 @@
      ssh -T git@github.com
 
      ssh -T git@chengengineer
+
+     ssh -T git@quanqiuheike
      ```
 
 2. **测试第二个GitHub账号：**

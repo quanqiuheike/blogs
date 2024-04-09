@@ -134,3 +134,13 @@ open ~/.ssh
  ssh -T git@github.com
 ```
 
+Host quanqiuheike
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_quanqiuheike
+ 
+
+Host chengengineer
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_chengengineer
