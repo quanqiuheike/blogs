@@ -189,7 +189,7 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
 
    - 如果一切正常，你应该会收到一条消息，确认你已经成功连接到GitHub。如果提示你要确认连接，请输入"Yes"确认即可。
 
-## PUSH推送提交异常经典问题
+### PUSH推送提交异常经典问题
   - 如果SSH正常添加到github，本地git@<github.com此处看是否为别名>
   ```
     git@github.com: Permission denied (publickey).
@@ -208,6 +208,25 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
    git remote set-url origin git@quanqiuheike:quanqiuheike/blogs.git
    git remote set-url origin quanqiuheike:quanqiuheike/blogs.git
    ```
+  **clone、pull、push遇到的问题 **
+    - clone 
+    ```
+    git clone git@github.com:quanqiuheike/blogs.git
+    git clone git@quanqiuheike:quanqiuheike/blogs.git
+    git clone quanqiuheike:quanqiuheike/blogs.git
+    ```
+  - pull
+  ```
+    git clone git@github.com:quanqiuheike/blogs.git
+    git clone git@quanqiuheike:quanqiuheike/blogs.git
+    git clone quanqiuheike:quanqiuheike/blogs.git
+  ```
+  - push
+   ```
+    git clone git@github.com:quanqiuheike/blogs.git
+    git clone git@quanqiuheike:quanqiuheike/blogs.git
+    git clone quanqiuheike:quanqiuheike/blogs.git
+  ```
 
 
 
