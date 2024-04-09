@@ -17,11 +17,14 @@
      
      ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
 
+     /c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer
+
+
      ssh-keygen -t ed25519 -C "cqxengineer@gmail.com"
 
      /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
 
-     /c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer
+     
 
      ```
 
@@ -164,8 +167,12 @@ Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/U
 1. **测试第一个GitHub账号：**
 
    - 运行以下命令测试第一个GitHub账号的SSH连接：
+   - config中的Host对应的为别名，测试以Host为准
+   - Host github.com 更改为Host quanqiuheike时，链接测试也变为ssh -T quanqiuheike
+   - 否则权限问题：git@github.com: Permission denied (publickey).
 
      ```
+
      ssh -T git@github.com
 
      ssh -T git@chengengineer
@@ -188,6 +195,25 @@ Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/U
 3. **确认连接：**
 
    - 如果一切正常，你应该会收到一条消息，确认你已经成功连接到GitHub。如果提示你要确认连接，请输入"Yes"确认即可。
+
+## PUSH推送提交异常经典问题
+  - 如果SSH正常添加到github，本地git@<github.com此处看是否为别名>
+  ```
+    git@github.com: Permission denied (publickey).
+    fatal: Could not read from remote repository.
+  ```
+  - 或者：
+  ```
+   Git 最著名报错 “ERROR: Permission to XXX.git denied to user”解决方案
+  ```
+  - 需要根据在.ssh配置的别名，重新更改远程的URL
+  - 通过`git remote -v`获取远程ssh地址,将git@github.com改为git@别名或者别名
+   ```
+   原本的为：git@github.com:quanqiuheike/blogs.git
+   需要将git@github.com改为git@quanqiuheike或者直接是quanqiuheike即可
+   
+   git remote set-url origin git@quanqiuheike:quanqiuheike/blogs.git
+   ```
 
 
 
