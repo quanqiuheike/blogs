@@ -20,7 +20,7 @@
 
 
 * 【03】高级UI
-  * [自定义View流程](【03】高级UI/自定义View流程.md)
+  * [自定义View流程](/【03】高级UI/自定义View流程.md)
 * 【04】FrameWork层源码解析
   
   * [ Handler源码分析](/【04】FrameWork层源码解析/Handler源码分析.md)
@@ -28,13 +28,13 @@
   * PMS安装与签名校验
   * WMS核心分析 
   * [Android系统启动流程](/【04】FrameWork层源码解析/Android系统启动流程.md)
-  * [Activity启动流程](【04】FrameWork层源码解析/Activity启动流程.md)
-  * [startActivity启动原理](【04】FrameWork层源码解析/Activity启动流程.md)
+  * [Activity启动流程](/【04】FrameWork层源码解析/Activity启动流程.md)
+  * [startActivity启动原理](/【04】FrameWork层源码解析/Activity启动流程.md)
 * 【05】性能优化
 * 【06】开源框架
-  * [Glide源码分析](【06】开源框架/Glide源码分析.md)
-  * [SPI机制](【06】开源框架/SPI机制.md)
-  * [Java-WebSocket框架基本用法](【06】开源框架/Java-WebSocket框架基本用法.md)
+  * [Glide源码分析](/【06】开源框架/Glide源码分析.md)
+  * [SPI机制](/【06】开源框架/SPI机制.md)
+  * [Java-WebSocket框架基本用法](/【06】开源框架/Java-WebSocket框架基本用法.md)
 * 【07】NDK
   * 函数指针与指针运算
   * 静态开辟内存与动态开辟内存
@@ -43,9 +43,9 @@
 * 【08】设计模式
 * 【09】Gralde
 * 【101】Git
-  * [Git创建两个SSH连接两个GitHub案例](【101】Git/Git创建两个SSH连接两个GitHub案例.md)
-  * [Git常用配置](【101】Git/Git常用配置.md)
-  * [Git常用命令项目应用](【101】Git/Git常用命令项目应用.md)
-  * [Git项目AS中应用](【101】Git/Git项目AS中应用.md)
+  * [Git创建两个SSH连接两个GitHub案例](/【101】Git/Git创建两个SSH连接两个GitHub案例.md)
+  * [Git常用配置](/【101】Git/Git常用配置.md)
+  * [Git常用命令项目应用](/【101】Git/Git常用命令项目应用.md)
+  * [Git项目AS中应用](/【101】Git/Git项目AS中应用.md)
 * zh-cn
 * [指南](/guide.md)
