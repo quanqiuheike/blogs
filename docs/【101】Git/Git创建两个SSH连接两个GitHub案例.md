@@ -40,12 +40,13 @@ Enter file in which to save the key (/c/Users/xxxx/.ssh/id_ed25519): I:\ssh\gith
     $ ssh-keygen -t ed25519 -C "quanqiuhaike@gmail.com"
     Generating public/private ed25519 key pair.
     Enter file in which to save the key (/c/Users/chengqiuxia/.ssh/id_ed25519): /c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike
+  ```
   
-
     `/c/Users/chengqiuxia/.ssh/id_ed25519_chengengineer`
 
     `/c/Users/chengqiuxia/.ssh/id_ed25519_quanqiuheike`
-  ```
+
+  
 
 ### 步骤 2: 添加第一个SSH密钥到GitHub账号
 
